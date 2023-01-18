@@ -1,0 +1,22 @@
+////////////////////////////////////////////////////////////////////////////////
+/// KERNEL.H
+///
+/// Kernel class
+///
+/// Dr J A Gow 2022
+///
+////////////////////////////////////////////////////////////////////////////////
+
+#ifndef KERNEL_H_
+#define KERNEL_H_
+
+extern void UserInit(void);
+
+#include "KernelClass.h"
+#include "ostimer.h"
+#include "EventReceiver.h"
+
+namespace Kernel {
+	extern KernelClass OS;
+}
+#endif
