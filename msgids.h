@@ -1,14 +1,3 @@
-///////////////////////////////////////////////////////////////////////////////
-/// MSGIDS.H
-///
-/// This include file contains macros to map the numeric message IDs to
-/// sensible names.
-///
-/// These should be consecutive up to a maximum of MSG_MAX_MSG_IDS (currently
-/// 26, defined in 'mq.h' in the kernel).
-///
-///////////////////////////////////////////////////////////////////////////////
-
 #ifndef _MSGIDS_H_
 #define _MSGIDS_H_
 

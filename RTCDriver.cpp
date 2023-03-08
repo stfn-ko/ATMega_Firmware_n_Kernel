@@ -1,16 +1,3 @@
-///////////////////////////////////////////////////////////////////////////////
-/// RTCDriver.cpp
-///
-/// RTC driver class. This encapsulates the low-level IIC calls to the RTC
-/// and provides higher level member functions to allow the time to be
-/// set and queried. All the BCD conversion and bitmasking should take
-/// place here. Further member functions can be added to query the status
-/// bits in the RTC, if needed.
-///
-/// Dr J A Gow 2022
-///
-///////////////////////////////////////////////////////////////////////////////
-
 #include "RTCDriver.h"
 
 

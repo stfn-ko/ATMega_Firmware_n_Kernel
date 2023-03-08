@@ -1,15 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-/// RTCDriver.h
-///
 /// RTC driver class. This encapsulates the low-level IIC calls to the RTC
 /// and provides higher level member functions to allow the time to be
 /// set and queried. All the BCD conversion and bitmasking should take
 /// place here. Further member functions can be added to query the status
 /// bits in the RTC, if needed.
-///
-/// Dr J A Gow 2022
-///
-///////////////////////////////////////////////////////////////////////////////
+
 
 #ifndef _RTCDRIVER_H_
 #define _RTCDRIVER_H_
@@ -17,10 +11,11 @@
 #include "kernel.h"
 
 class RTCDriver {
-    static const unsigned char RTC_DEFAULT_IIC_ADDRESS = 222;
-    const unsigned char RTC_ICC_ADDRESS;
+    static constexpr unsigned char RTC_DEFAULT_IIC_ADDRESS = 222;
 
-  public:
+  protected:
+    const unsigned char RTC_ICC_ADDRESS;
+    
     struct RTC_DATE
     {
       uint8_t second;
@@ -38,6 +33,7 @@ class RTCDriver {
       RTC_DATE date;
     };
 
+  public:
     // custom constructor : takes RTC address ->
     // enables multiple Real-Time-Clock devices instantiation
     RTCDriver(unsigned char _iic_address = RTC_DEFAULT_IIC_ADDRESS);
@@ -46,9 +42,7 @@ class RTCDriver {
     // doesn't allow encoded format via refrence
     int set_date(RTC_DATE& _input_date);
 
-
     // Getter : gets in rtc-readable format and converts it into human-readable format
-
     int get_date(RTC_DATE& _input_date);
 };
 
