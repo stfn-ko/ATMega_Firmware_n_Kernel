@@ -25,7 +25,7 @@ void LogTask::TaskLoop()
   {
     case LOG_SYSTEM_STATE::INIT:
       {
-        if (e2.memory_read(E2Driver::E2_LAST_ADDRESS, (unsigned char *)&this->control_block, 8))
+        if (e2.memory_read(E2Driver::E2_LAST_ADDRESS, (uint8_t*)&this->control_block, sizeof(CONTROL_BLOCK)))
         {
           ++this->IIC_failures;
           return;
@@ -50,14 +50,12 @@ void LogTask::TaskLoop()
           this->control_block.magic = this->CONTROL_BLOCK_MAGIC;
           this->log_system_state = LOG_SYSTEM_STATE::WRITE_CTRL_BLOCK;
         }
-
         else if (this->start_readback)
         {
           this->start_readback = false;
           this->next_to_read = this->control_block.oldest_entry;
           this->log_system_state = LOG_SYSTEM_STATE::READBACK_LOG;
         }
-
         else if (this->pHead && this->message_queue_size)
           this->log_system_state = LOG_SYSTEM_STATE::WRITE_LOG_MSG;
 
@@ -65,7 +63,8 @@ void LogTask::TaskLoop()
       break;
 
     case LOG_SYSTEM_STATE::WRITE_LOG_MSG:
-        if (this->e2.memory_write(this->control_block.next_free_entry, (const char*)&this->pHead))
+      {
+        if (this->e2.memory_write(this->control_block.next_free_entry, (const uint8_t*)this->pHead, MAX_LOG_MESSAGE_SIZE))
         {
           ++this->IIC_failures;
           return;
@@ -90,12 +89,13 @@ void LogTask::TaskLoop()
           this->control_block.oldest_entry = 0;
 
         this->IIC_failures = 0;
-        this->log_system_state = LOG_SYSTEM_STATE::WRITE_CTRL_BLOCK;
-      break;
 
+        this->log_system_state = LOG_SYSTEM_STATE::WRITE_CTRL_BLOCK;
+        break;
+      }
     case LOG_SYSTEM_STATE::WRITE_CTRL_BLOCK:
       {
-        if (e2.memory_write(E2Driver::E2_LAST_ADDRESS, (const char*)&this->control_block))
+        if (e2.memory_write(E2Driver::E2_LAST_ADDRESS, (const uint8_t*)&this->control_block, sizeof(CONTROL_BLOCK)))
         {
           ++this->IIC_failures;
           return;
@@ -110,7 +110,7 @@ void LogTask::TaskLoop()
       {
         LOG_PAGE output_page;
 
-        if (this->e2.memory_read(this->next_to_read, (unsigned char*)&output_page))
+        if (this->e2.memory_read(this->next_to_read, (unsigned char*)&output_page, E2Driver::E2_PAGE_SIZE))
         {
           ++this->IIC_failures;
           return;
@@ -127,7 +127,6 @@ void LogTask::TaskLoop()
       break;
 
     case LOG_SYSTEM_STATE::IIC_FAIL:
-      Serial.print("DATALOGGER IIC LOCKED OUT - IIC FAIL COUNT EXCEEDED\n");
       break;
 
     default: break;
@@ -140,7 +139,10 @@ int LogTask::CreateLogEntry(const char* _message)
   RTC_DATE date;
   LOG_PAGE* new_page_entry = new LOG_PAGE;
 
-  if ((this->message_queue_size >= this->MAX_MESSAGE_QUEUE_SIZE) || !new_page_entry || this->rtc.get_date(new_page_entry->date))
+  if ( (strlcpy(new_page_entry->message, _message, MAX_LOG_MESSAGE_SIZE) >= MAX_LOG_MESSAGE_SIZE)
+       || (this->message_queue_size >= this->MAX_MESSAGE_QUEUE_SIZE)
+       || this->rtc.get_date(new_page_entry->date)
+       || !new_page_entry)
   {
     delete new_page_entry;
     return -1;
@@ -148,16 +150,20 @@ int LogTask::CreateLogEntry(const char* _message)
 
   new_page_entry->next_page = NULL;
 
-  strncpy(new_page_entry->message, _message, MAX_LOG_MESSAGE_SIZE);
   this->LogPageToSerial(new_page_entry);
 
   if (!this->pHead)
-    this->pHead = this->pEnd = new_page_entry;
+  {
+    this->pHead = new_page_entry;
+    this->pEnd = new_page_entry;
+  }
   else
-    this->pEnd->next_page = this->pEnd = new_page_entry;
+  {
+    this->pEnd->next_page = new_page_entry;
+    this->pEnd = new_page_entry;
+  }
 
   ++this->message_queue_size;
-  delete new_page_entry;
   return 0;
 }
 
@@ -181,7 +187,6 @@ void LogTask::EventHandler(int _message_id, void * _context)
   {
     case MSG_ID_DATALOG_LOGEVENT:
       CreateLogEntry((const char*)_context);
-      delete[] static_cast<char*>(_context);
       break;
 
     case MSG_ID_DATALOG_DUMPLOG:

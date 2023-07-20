@@ -14,7 +14,6 @@ class LogTask : public Kernel::Task, public RTCDriver, public E2Driver
     static constexpr uint16_t CONTROL_BLOCK_MAGIC = 0xAAAA;
     static constexpr uint8_t MAX_LOG_MESSAGE_SIZE = E2Driver::E2_PAGE_SIZE - sizeof(RTCDriver::RTC_DATE);
     static constexpr uint8_t MAX_MESSAGE_QUEUE_SIZE = 3;
-    //#define LOG_MAX_ENTRIES ((65536%128)-1)  == -1 ... no comments
 
     enum LOG_SYSTEM_STATE
     {
