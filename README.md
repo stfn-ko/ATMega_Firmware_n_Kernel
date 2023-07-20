@@ -1,6 +1,6 @@
 # Firmware and Kernel for ATMega328p
 
-> Kernel belongs to my DMU's professor John Gow
+> Kernel belongs to my professor at De Montfort University (DMU) John Gow.
 
 ## Features and Specification
 
