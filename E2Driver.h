@@ -39,11 +39,10 @@ class E2Driver {
     };
 
     // write to eeprom : takes page address and input data ->
-    int memory_write(uint16_t _page_address = 0, const char * _input_data = "empty data input!");
+    int memory_write(uint16_t _page_address = 0, const uint8_t *_input_data = "empty data input!", uint8_t _data_length = E2_PAGE_SIZE);
     
     // reads specific page : takes page address
-    //int memory_read(uint16_t _page_address = 0, unsigned char* _output_data = (unsigned char*)"error");
-    int memory_read(uint16_t _page_address = 0, unsigned char* _output_data  = (unsigned char*)"error", uint8_t _data_length = E2_PAGE_SIZE);
+    int memory_read(uint16_t _page_address = 0, uint8_t *_output_data  = (unsigned char*)"error", uint8_t _data_length = E2_PAGE_SIZE);
 };
 
 
