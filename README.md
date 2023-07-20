@@ -58,6 +58,6 @@ This repository contains firmware for a motor speed control system with specific
 
 ## Schematics
 
-- ### [Development Board](./schematics/Dev_Board_Project.pdf)
-- ### [Datasheet for MCP7490](./schematics/MCHPS03117.pdf)
-- ### [Datasheet for 24LC512](./schematics/MCHPS05656.pdf)
+- ### [Development Board](schematics/Dev_Board_Project.pdf)
+- ### [Datasheet for MCP7490](schematics/MCHPS03117.pdf)
+- ### [Datasheet for 24LC512](schematics/MCHPS05656.pdf)
