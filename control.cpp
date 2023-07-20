@@ -1,11 +1,9 @@
 #include "control.h"
 
-
 Control::Control()
 {
   Kernel::OS.MessageQueue.Subscribe(MSG_ID_NEW_RPS_ENTERED, this);
 }
-
 
 void Control::TaskLoop()
 {
@@ -16,7 +14,7 @@ void Control::TaskLoop()
     this->timer_counter++;
 
   this->actual_rps = RPS::GetRPS();
-  Kernel::OS.MessageQueue.Post(MSG_ID_NEW_ACTUAL_RPS, (void*)this->actual_rps, Kernel::MQ_OWNER_CALLER, Kernel::MQ_CONTEXT_TASK);
+  Kernel::OS.MessageQueue.Post(MSG_ID_NEW_ACTUAL_RPS, (void *)this->actual_rps, Kernel::MQ_OWNER_CALLER, Kernel::MQ_CONTEXT_TASK);
 
   if (this->timer_counter >= 8 && this->demand_rps > 0)
   {
@@ -27,8 +25,7 @@ void Control::TaskLoop()
   this->timer.Restart();
 }
 
-
-void Control::EventHandler(int _posted_msg_id, void * _context)
+void Control::EventHandler(int _posted_msg_id, void *_context)
 {
   if (_posted_msg_id != MSG_ID_NEW_RPS_ENTERED)
     return;
@@ -62,10 +59,12 @@ void Control::EventHandler(int _posted_msg_id, void * _context)
     this->SendLogMessage(this->demand_rps, this->actual_rps);
 }
 
-
 void Control::SendLogMessage(uint16_t _demand_rps, uint16_t _actual_rps)
 {
-  char* log_message = new char[38];
+  // Using a static array for log_message to avoid dynamic memory allocation and promote modularity.
+  // This approach ensures predictable memory usage, and the relatively small log_message size
+  // keeps the overhead low.
+  static char log_message[38];
   sprintf(log_message, "- Demand RPS: %03d\n- Actual RPS: %03d\n", _demand_rps, _actual_rps);
-  Kernel::OS.MessageQueue.Post(MSG_ID_DATALOG_LOGEVENT, static_cast<void*>(log_message), Kernel::MQ_OWNER_CALLER, Kernel::MQ_CONTEXT_TASK);
+  Kernel::OS.MessageQueue.Post(MSG_ID_DATALOG_LOGEVENT, log_message, Kernel::MQ_OWNER_CALLER, Kernel::MQ_CONTEXT_TASK);
 }
