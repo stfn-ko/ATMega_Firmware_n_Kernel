@@ -1,6 +1,6 @@
 # Firmware and Kernel for ATMega328p
 
-> Kernel belongs to my DMU's professor John Gow
+> Kernel belongs to my professor at De Montfort University (DMU) John Gow.
 
 ## Features and Specification
 This repository contains firmware for a motor speed control system with specific features and requirements. The key features and specifications are as follows:
