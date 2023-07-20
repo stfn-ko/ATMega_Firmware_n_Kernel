@@ -3,6 +3,7 @@
 > Kernel belongs to my DMU's professor John Gow
 
 ## Features and Specification
+
 This repository contains firmware for a motor speed control system with specific features and requirements. The key features and specifications are as follows:
 
 ### 1. Display (Main Operation)
@@ -18,12 +19,12 @@ This repository contains firmware for a motor speed control system with specific
 - If multiple keys are pressed simultaneously, the first detected key press is accepted.
 - Numerical values can be set by the operator via the keypad.
 - The '#' key acts as an 'enter' key, accepting the entered value.
-- The '*' key is the backspace key, deleting the previous digit entered (if any).
+- The '\*' key is the backspace key, deleting the previous digit entered (if any).
 
 ### 3. 7-Segment LED Display
 
 - Displays the current key being pressed while it is pressed.
-- '#' is displayed as 'E', and '*' is displayed as 'b'.
+- '#' is displayed as 'E', and '\*' is displayed as 'b'.
 - When no key is pressed, the decimal point is illuminated.
 - The decimal point is extinguished while a key is pressed.
 
@@ -57,6 +58,6 @@ This repository contains firmware for a motor speed control system with specific
 
 ## Schematics
 
-- ### [Development Board](./schematics/Dev_Board_Project)
-- ### [Datasheet for MCP7490](./schematics/MCHPS03117)
-- ### [Datasheet for 24LC512](./schematics/MCHPS05656)
+- ### [Development Board](./schematics/Dev_Board_Project.pdf)
+- ### [Datasheet for MCP7490](./schematics/MCHPS03117.pdf)
+- ### [Datasheet for 24LC512](./schematics/MCHPS05656.pdf)
